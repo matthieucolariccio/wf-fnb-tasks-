@@ -21,20 +21,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
   body{background:var(--bg2);color:var(--text)}
 }
 
+/* ── DEPTH COLOR PALETTE ── */
+/* depth 0 (root group): forest green family */
+/* depth 1: amber brown family */
+/* depth 2: stone blue family */
+/* depth 3+: muted purple family */
+/* tasks: steel blue */
+
 /* ── SETUP ── */
 #setup{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:var(--bg2)}
-.scard{background:var(--bg);border:1px solid var(--border);border-radius:var(--rl);padding:32px;max-width:580px;width:100%}
+.scard{background:var(--bg);border:1px solid var(--border);border-radius:var(--rl);padding:32px;max-width:600px;width:100%}
 .slogo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px;margin-bottom:6px}
 .leaf{background:var(--e1);border-radius:50% 10% 50% 10%;transform:rotate(-20deg);flex-shrink:0}
 .ssub{font-size:13px;color:var(--text2);margin-bottom:24px;padding-left:30px;line-height:1.6}
-.step{display:flex;gap:14px;margin-bottom:20px}
+.step{display:flex;gap:14px;margin-bottom:18px}
 .snum{width:24px;height:24px;border-radius:50%;background:var(--e1);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
 .stit{font-weight:600;font-size:13px;margin-bottom:4px}
 .sdesc{font-size:12px;color:var(--text2);line-height:1.7}
 .sdesc a{color:var(--e1)}.sdesc strong{font-weight:600;color:var(--text)}
 .cw{position:relative;margin:8px 0}
-.cb{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 36px 10px 12px;font-family:monospace;font-size:11px;color:var(--text);white-space:pre;overflow-x:auto;line-height:1.5}
+.cblock{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 40px 10px 12px;font-family:monospace;font-size:11px;color:var(--text);white-space:pre;overflow-x:auto;line-height:1.5;max-height:200px}
 .cpbtn{position:absolute;top:6px;right:6px;padding:2px 9px;font-size:10px;border-radius:4px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer}
+.cpbtn:hover{background:var(--bg3)}
 .urow{display:flex;gap:8px;margin-top:10px}
 .urow input{flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:var(--r);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit}
 .urow input:focus{outline:none;border-color:var(--e1)}
@@ -81,28 +89,34 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
 table{width:100%;border-collapse:collapse;table-layout:fixed}
 th{font-size:11px;color:var(--text2);font-weight:600;text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--bg3);position:sticky;top:0;z-index:2;white-space:nowrap;text-transform:uppercase;letter-spacing:.4px}
 td{padding:6px 10px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rn td{font-weight:600}
-.rn:hover td,.rt:hover td{background:var(--bg3)!important}
-.rt td{background:var(--bg)}
-.rb td{color:var(--text2)}
+.rn td{font-weight:600}.rn:hover td,.rt:hover td{background:var(--bg3)!important}
+.rt td{background:var(--bg)}.rb td{color:var(--text2)}
 
 /* GANTT */
 .gw{display:flex;height:100%;overflow:hidden}
-.gl{width:240px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;overflow-x:hidden;position:relative}
+.gl{width:260px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column}
+.gl-hdr{height:48px;flex-shrink:0;background:var(--e1l);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:600;color:var(--e1t)}
+.gl-body{flex:1;overflow-y:auto;overflow-x:hidden}
 .gr{flex:1;overflow:auto;position:relative}
-.glbl{padding:5px 10px;font-size:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:5px;min-height:30px;white-space:nowrap;overflow:hidden;cursor:pointer}
-.glbl:hover{background:var(--bg3)}
-.ghdr{display:flex;background:var(--bg3);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:4}
-.gday{font-size:10px;color:var(--text2);border-right:1px solid var(--border);text-align:center;padding:5px 0;flex-shrink:0;font-weight:500}
-.gbar{height:14px;border-radius:3px;position:absolute;display:flex;align-items:center;padding:0 6px;font-size:9px;color:#fff;font-weight:600;white-space:nowrap;overflow:hidden;cursor:pointer;z-index:2}
-.gbar:hover{filter:brightness(1.1)}
-.gbar.dn{opacity:.4}
-.gtd{position:absolute;top:0;bottom:0;width:2px;background:var(--e4);z-index:5;pointer-events:none}
-.gg{position:absolute;top:0;bottom:0;width:1px;background:var(--border);pointer-events:none;opacity:.4}
-.gzoom{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2)}
-.gzoom button{width:26px;height:26px;border-radius:var(--r);border:1px solid var(--border2);background:var(--bg);color:var(--text);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.gr-hdr-wrap{position:sticky;top:0;z-index:4;background:var(--bg3)}
+.g-month-row{display:flex;border-bottom:1px solid var(--border);min-height:24px}
+.g-month-cell{font-size:10px;font-weight:600;color:var(--e1t);border-right:1px solid var(--border);padding:4px 6px;flex-shrink:0;background:var(--e1l);white-space:nowrap;overflow:hidden}
+.g-day-row{display:flex;border-bottom:1px solid var(--border);min-height:24px}
+.g-day-cell{font-size:10px;color:var(--text2);border-right:1px solid var(--border);text-align:center;padding:4px 0;flex-shrink:0;font-weight:400}
+.g-day-cell.today-hdr{background:var(--e4l);color:var(--e4t);font-weight:700}
+.grow{border-bottom:1px solid var(--border);position:relative}
+.gbar-bg{height:10px;border-radius:3px;position:absolute;top:50%;transform:translateY(-50%)}
+.gbar-due{width:10px;height:10px;border-radius:2px;position:absolute;top:50%;transform:translateY(-50%)}
+.g-today-line{position:absolute;top:0;bottom:0;width:2px;background:var(--e4);opacity:.7;z-index:3;pointer-events:none}
+.g-grid-line{position:absolute;top:0;bottom:0;width:1px;background:var(--border);pointer-events:none;opacity:.35}
+.gzoom{display:flex;align-items:center;gap:6px}
+.gzoom button{width:26px;height:26px;border-radius:var(--r);border:1px solid var(--border2);background:var(--bg);color:var(--text);cursor:pointer;font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center}
 .gzoom button:hover{background:var(--bg3)}
-#gzlbl{min-width:36px;text-align:center;font-size:11px;font-weight:500}
+#gzlbl{min-width:42px;text-align:center;font-size:11px;font-weight:600;color:var(--text2)}
+
+/* GLBL rows must match GROW height */
+.glbl-row{border-bottom:1px solid var(--border);display:flex;align-items:center;gap:5px;padding:0 8px;white-space:nowrap;overflow:hidden;cursor:pointer;user-select:none}
+.glbl-row:hover{background:var(--bg3)}
 
 /* LIST */
 .lw{padding:14px 18px;display:flex;flex-direction:column;gap:10px}
@@ -149,12 +163,12 @@ td{padding:6px 10px;border-bottom:1px solid var(--border);vertical-align:middle;
 .dopt input[type=checkbox]{accent-color:var(--e1);width:13px;height:13px;flex-shrink:0;margin-top:2px;cursor:pointer}
 .demp{padding:12px;font-size:12px;color:var(--text3);text-align:center}
 
-/* NODE CONTEXT MENU */
-.ctxmenu{position:fixed;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:200;min-width:160px;padding:4px 0}
+/* CONTEXT MENU */
+.ctxmenu{position:fixed;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:200;min-width:168px;padding:4px 0}
 .ctxi{padding:7px 14px;font-size:12px;cursor:pointer;color:var(--text)}
 .ctxi:hover{background:var(--bg3)}
-.ctxi.danger{color:var(--e4t)}
-.ctxi.danger:hover{background:var(--e4l)}
+.ctxi.danger{color:var(--e4t)}.ctxi.danger:hover{background:var(--e4l)}
+.ctxsep{border-top:1px solid var(--border);margin:4px 0}
 
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -167,39 +181,13 @@ td{padding:6px 10px;border-bottom:1px solid var(--border);vertical-align:middle;
 <div id="setup">
   <div class="scard">
     <div class="slogo"><div class="leaf" style="width:20px;height:20px"></div>Wonderfruit F&B Task Manager</div>
-    <div class="ssub">Connect to Google Sheets so Korn, Michel and Matthieu share live data. One-time setup, ~3 minutes.</div>
-    <div class="step"><div class="snum">1</div><div><div class="stit">Create a Google Sheet</div><div class="sdesc">Go to <a href="https://sheets.google.com" target="_blank">sheets.google.com</a>, create a blank spreadsheet and name it <strong>WF F&B Tasks</strong>.</div></div></div>
-    <div class="step"><div class="snum">2</div><div><div class="stit">Open Apps Script</div><div class="sdesc">Click <strong>Extensions → Apps Script</strong>. Delete all existing code.</div></div></div>
-    <div class="step"><div class="snum">3</div><div><div class="stit">Paste this backend code</div>
-      <div class="cw"><pre class="cb" id="gscode">const SHEET_NAME = 'WF_FNB_DATA';
-function getSheet() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  let s = ss.getSheetByName(SHEET_NAME);
-  if (!s) { s = ss.insertSheet(SHEET_NAME); s.getRange('A1').setValue('{}'); }
-  return s;
-}
-function doGet(e) {
-  const raw = getSheet().getRange('A1').getValue();
-  const data = raw ? JSON.parse(raw) : { nodes: [], uid: 1 };
-  return ContentService.createTextOutput(JSON.stringify({ ok: true, data }))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-function doPost(e) {
-  try {
-    const body = JSON.parse(e.postData.contents);
-    if (body.action === 'write') {
-      getSheet().getRange('A1').setValue(JSON.stringify(body.data));
-      return ContentService.createTextOutput(JSON.stringify({ ok: true }))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-  } catch(err) {
-    return ContentService.createTextOutput(JSON.stringify({ ok:false, error:err.message }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}</pre><button class="cpbtn" onclick="copyCode()">Copy</button></div>
-    </div></div>
-    <div class="step"><div class="snum">4</div><div><div class="stit">Deploy as a web app</div><div class="sdesc">Click <strong>Deploy → New deployment</strong>. Type: <strong>Web app</strong>. Execute as: <strong>Me</strong>. Access: <strong>Anyone</strong>. Deploy, authorize, copy the URL.</div></div></div>
-    <div class="step"><div class="snum">5</div><div><div class="stit">Paste the URL here</div><div class="sdesc">Each team member does this once with the same URL.</div>
+    <div class="ssub">Connect to Google Sheets so the team shares live data. One-time setup per person, ~3 minutes.</div>
+    <div class="step"><div class="snum">1</div><div><div class="stit">Create a Google Sheet</div><div class="sdesc">Go to <a href="https://sheets.google.com" target="_blank">sheets.google.com</a>, create a blank spreadsheet named <strong>WF F&B Tasks</strong>.</div></div></div>
+    <div class="step"><div class="snum">2</div><div><div class="stit">Open Apps Script</div><div class="sdesc">In the sheet click <strong>Extensions → Apps Script</strong>. Delete all existing code.</div></div></div>
+    <div class="step"><div class="snum">3</div><div><div class="stit">Paste the Code.gs file</div><div class="sdesc">Copy the contents of <strong>Code.gs</strong> (provided separately) into the editor and press <strong>Ctrl+S</strong>. Update the email addresses at the top of the file first.</div></div></div>
+    <div class="step"><div class="snum">4</div><div><div class="stit">Deploy as a web app</div><div class="sdesc"><strong>Deploy → New deployment</strong> → Type: Web app → Execute as: Me → Access: Anyone → Deploy → Authorize → Copy the URL.</div></div></div>
+    <div class="step"><div class="snum">5</div><div><div class="stit">Set up email notifications</div><div class="sdesc">In the Apps Script editor, select <strong>setupTrigger</strong> from the function dropdown and click <strong>Run</strong>. This creates a daily 8am check for deadlines.</div></div></div>
+    <div class="step"><div class="snum">6</div><div><div class="stit">Paste the URL here</div><div class="sdesc">Each team member does this once.</div>
       <div class="urow"><input type="url" id="surl" placeholder="https://script.google.com/macros/s/…/exec"><button class="btn btn-p" onclick="connect()">Connect</button></div>
       <div id="uerr"></div>
     </div></div>
@@ -222,7 +210,7 @@ function doPost(e) {
       <button class="btn btn-p" onclick="openNodeModal(null,null,'task')">+ New task</button>
     </div>
   </div>
-  <div class="toolbar" id="toolbar">
+  <div class="toolbar">
     <select class="fsel" onchange="fA=this.value;render()">
       <option value="">All assignees</option>
       <option>Korn</option><option>Michel</option><option>Matthieu</option>
@@ -237,9 +225,9 @@ function doPost(e) {
     </select>
     <div class="spacer"></div>
     <div class="gzoom" id="gzoom-ctrl" style="display:none">
-      <button onclick="zoom(-1)">&#8722;</button>
-      <span id="gzlbl">Day</span>
-      <button onclick="zoom(1)">+</button>
+      <button onclick="zoom(-1)" title="Zoom out">&#8722;</button>
+      <span id="gzlbl">Month</span>
+      <button onclick="zoom(1)" title="Zoom in">+</button>
     </div>
     <span class="pill" id="tc">0 tasks</span>
   </div>
@@ -251,29 +239,60 @@ function doPost(e) {
 <div id="ctx"></div>
 
 <script>
-/* ═══════════════════════════════════════════════
-   DATA MODEL
-   nodes: flat array, each node has:
-     id, type ('group'|'task'), name, parentId|null,
-     color (groups), description, status, priority,
-     due, assignees, deps (task IDs), subtasks[]
-   Infinite nesting: groups contain groups or tasks
-═══════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   DEPTH COLOR SYSTEM
+   Each depth level gets a hue. Light = bar fill, Dark = due marker.
+═══════════════════════════════════════════════════════════ */
+const DEPTH_COLORS = [
+  { light:'#7ab648', dark:'#3B6D11' },  // depth 0 – forest green
+  { light:'#e0a84a', dark:'#8a5a0a' },  // depth 1 – amber
+  { light:'#5b9bd5', dark:'#1a5598' },  // depth 2 – steel blue
+  { light:'#a07cc5', dark:'#5c3d8f' },  // depth 3 – purple
+  { light:'#e07ba0', dark:'#9c2f5e' },  // depth 4 – rose
+  { light:'#4bbfb0', dark:'#1a7a6e' },  // depth 5+ – teal
+];
+const TASK_COLOR = { light:'#6aaddc', dark:'#2874a6' }; // tasks always steel-blue
 
-const TEAM={Korn:{ini:'KO',c:'#3B6D11',bg:'#EAF3DE'},Michel:{ini:'MI',c:'#BA7517',bg:'#FAEEDA'},Matthieu:{ini:'MA',c:'#5F5E5A',bg:'#F1EFE8'}};
-const GCOLS=[{l:'Forest green',v:'#3B6D11'},{l:'Amber brown',v:'#BA7517'},{l:'Stone grey',v:'#5F5E5A'},{l:'Terracotta',v:'#993C1D'},{l:'Lime green',v:'#639922'},{l:'Dark teal',v:'#0F6E56'},{l:'Dusty rose',v:'#993556'},{l:'Navy',v:'#185FA5'}];
-const LS_URL='wf_url4',LS_DAT='wf_dat4';
+function depthColor(depth, isTask){
+  if(isTask) return TASK_COLOR;
+  const d = Math.min(depth, DEPTH_COLORS.length-1);
+  return DEPTH_COLORS[d];
+}
 
-let nodes=[]; // flat list
-let ex={}; // expanded state keyed by id
-let cv='table';
-let fA='',fS='',fP='';
-let uid=1;
-let apiUrl='';
-let pushTimer=null,busy=false;
-let gzoomLevel=2; // 0=week,1=3day,2=day,3=12h,4=6h
-const ZOOM_LABELS=['Week','3 days','Day','12h','6h'];
-const ZOOM_DW=[120,60,34,20,12];
+/* ═══════════════════════════════════════════════════════════
+   ZOOM LEVELS
+═══════════════════════════════════════════════════════════ */
+// Each level: { label, colW (px per col), unit ('day'|'week'|'month'|'quarter'|'year'), tickFmt }
+const ZOOM_LEVELS = [
+  { label:'Year',    colW:14,  unit:'week' },
+  { label:'6 months',colW:22, unit:'week' },
+  { label:'3 months',colW:34, unit:'week' },
+  { label:'Month',   colW:28,  unit:'day' },
+  { label:'2 weeks', colW:42,  unit:'day' },
+  { label:'Week',    colW:70,  unit:'day' },
+  { label:'3 days',  colW:120, unit:'day' },
+];
+let gzoomLevel = 3; // default: Month
+
+/* ═══════════════════════════════════════════════════════════
+   CONSTANTS & STATE
+═══════════════════════════════════════════════════════════ */
+const TEAM = {
+  Korn:    {ini:'KO', c:'#3B6D11', bg:'#EAF3DE'},
+  Michel:  {ini:'MI', c:'#BA7517', bg:'#FAEEDA'},
+  Matthieu:{ini:'MA', c:'#5F5E5A', bg:'#F1EFE8'}
+};
+const GCOLS = [
+  {l:'Forest green',v:'#3B6D11'},{l:'Amber brown',v:'#BA7517'},
+  {l:'Stone grey',v:'#5F5E5A'},{l:'Terracotta',v:'#993C1D'},
+  {l:'Lime green',v:'#639922'},{l:'Dark teal',v:'#0F6E56'},
+  {l:'Steel blue',v:'#2874a6'},{l:'Dusty rose',v:'#993556'}
+];
+const LS_URL='wf_url5', LS_DAT='wf_dat5';
+const ROW_H = 32; // px — must match .glbl-row and .grow height
+
+let nodes=[], ex={}, cv='table', fA='', fS='', fP='', uid=1;
+let apiUrl='', pushTimer=null, busy=false;
 
 /* ─── UTILS ─── */
 const $=id=>document.getElementById(id);
@@ -285,22 +304,19 @@ function fdt(d){if(!d)return'';const[,m,dy]=d.split('-');return['Jan','Feb','Mar
 function avatar(n,sz=22){const t=TEAM[n]||{ini:(n||'?').slice(0,2).toUpperCase(),c:'#888',bg:'#eee'};return`<div class="av" style="width:${sz}px;height:${sz}px;font-size:${sz<20?8:9}px;background:${t.bg};color:${t.c};border:1.5px solid ${t.c}50" title="${esc(n)}">${t.ini}</div>`}
 function mt(t){if(fA&&!(t.assignees||[]).includes(fA))return 0;if(fS&&t.status!==fS)return 0;if(fP&&t.priority!==fP)return 0;return 1}
 function getDeps(){return[...document.querySelectorAll('.depk input:checked')].map(b=>b.value)}
-function sw(v){cv=v;document.querySelectorAll('.vt').forEach((b,i)=>b.classList.toggle('on',['table','gantt','list'][i]===v));$('gzoom-ctrl').style.display=v==='gantt'?'flex':'none';render()}
 function tex(id){ex[id]=!ex[id];render()}
+function sw(v){cv=v;document.querySelectorAll('.vt').forEach((b,i)=>b.classList.toggle('on',['table','gantt','list'][i]===v));$('gzoom-ctrl').style.display=v==='gantt'?'flex':'none';render()}
+function zoom(dir){gzoomLevel=Math.max(0,Math.min(ZOOM_LEVELS.length-1,gzoomLevel+dir));$('gzlbl').textContent=ZOOM_LEVELS[gzoomLevel].label;render()}
 
 /* ─── TREE HELPERS ─── */
-function children(parentId){return nodes.filter(n=>n.parentId===parentId)}
+function children(pid){return nodes.filter(n=>n.parentId===pid)}
 function rootNodes(){return nodes.filter(n=>!n.parentId)}
 function allTasks(){return nodes.filter(n=>n.type==='task')}
-function taskName(id){return (nodes.find(n=>n.id===id)||{}).name||id}
-function flatTasksExcl(excl){return nodes.filter(n=>n.type==='task'&&n.id!==excl).map(t=>({id:t.id,name:t.name,path:getPath(t.id)}))}
-function getPath(id){const n=nodes.find(x=>x.id===id);if(!n)return'';const parts=[];let cur=n;while(cur.parentId){cur=nodes.find(x=>x.id===cur.parentId)||{};if(cur.name)parts.unshift(cur.name);}return parts.join(' / ')}
+function taskName(id){return(nodes.find(n=>n.id===id)||{}).name||id}
 function getDepth(id){let d=0,cur=nodes.find(n=>n.id===id);while(cur&&cur.parentId){d++;cur=nodes.find(n=>n.id===cur.parentId)}return d}
-function getNodeColor(id){// climb tree to find nearest group color
-  let cur=nodes.find(n=>n.id===id);
-  while(cur){if(cur.color)return cur.color;cur=nodes.find(n=>n.id===cur.parentId)}
-  return'#3B6D11'}
-function getAllDescendantTasks(id){const res=[];function walk(nid){children(nid).forEach(c=>{if(c.type==='task')res.push(c);else walk(c.id)})}walk(id);return res}
+function getPath(id){const parts=[];let cur=nodes.find(n=>n.id===id);while(cur&&cur.parentId){cur=nodes.find(n=>n.id===cur.parentId);if(cur)parts.unshift(cur.name)}return parts.join(' / ')}
+function getAllDescTasks(id){const r=[];function w(nid){children(nid).forEach(c=>{if(c.type==='task')r.push(c);else w(c.id)})}w(id);return r}
+function flatTasksExcl(excl){return nodes.filter(n=>n.type==='task'&&n.id!==excl).map(t=>({id:t.id,name:t.name,path:getPath(t.id)}))}
 
 /* ─── SYNC ─── */
 function ss2(st,txt){const d=$('sdot'),l=$('slbl');if(!d)return;d.className='sdot '+st;l.textContent=txt}
@@ -344,50 +360,52 @@ async function connect(){
   }catch(e){err.textContent='Could not reach that URL. Make sure access is set to "Anyone".'}
 }
 function disconnect(){if(!confirm('Disconnect from Google Sheets?'))return;apiUrl='';localStorage.removeItem(LS_URL);$('app').classList.remove('on');$('setup').style.display='flex'}
-function copyCode(){navigator.clipboard.writeText($('gscode').textContent).then(()=>{const b=document.querySelector('.cpbtn');b.textContent='Copied!';setTimeout(()=>b.textContent='Copy',1500)})}
-function init(){const u=localStorage.getItem(LS_URL);if(u){apiUrl=u;$('setup').style.display='none';$('app').classList.add('on');loadLocal();render();pull()}}
+function init(){
+  $('gzlbl').textContent=ZOOM_LEVELS[gzoomLevel].label;
+  const u=localStorage.getItem(LS_URL);
+  if(u){apiUrl=u;$('setup').style.display='none';$('app').classList.add('on');loadLocal();render();pull()}
+}
 
-/* ═══════════════════════════════════════════════
-   TABLE VIEW — recursive tree rendering
-═══════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   TABLE VIEW
+═══════════════════════════════════════════════════════════ */
 function renderTable(){
   const roots=rootNodes();
   if(!roots.length)return empty();
   let tc=0;
-  let h=`<div class="tw"><table><colgroup><col style="width:30%"><col style="width:10%"><col style="width:7%"><col style="width:12%"><col style="width:9%"><col style="width:18%"><col style="width:14%"></colgroup>
-  <thead><tr><th>Name</th><th>Status</th><th>Priority</th><th>Assignees</th><th>Due</th><th>Dependencies</th><th></th></tr></thead><tbody>`;
+  let h=`<div class="tw"><table>
+  <colgroup><col style="width:30%"><col style="width:10%"><col style="width:7%"><col style="width:10%"><col style="width:9%"><col style="width:9%"><col style="width:13%"><col style="width:12%"></colgroup>
+  <thead><tr><th>Name</th><th>Status</th><th>Pri</th><th>Assignees</th><th>Start</th><th>Due</th><th>Dependencies</th><th></th></tr></thead><tbody>`;
 
-  function renderNode(n, depth){
-    const indent=depth*18;
-    const kids=children(n.id);
-    const isGroup=n.type==='group';
-    const open=ex[n.id]!==false;
-    const bgColor=isGroup?(depth===0?'var(--e1l)':(depth===1?'var(--bg3)':'var(--bg)')):'var(--bg)';
-    const fontW=isGroup?'600':'400';
+  function rNode(n, depth){
+    const indent = depth*18;
+    const kids = children(n.id);
+    const open = ex[n.id]!==false;
+    const isGroup = n.type==='group';
+    const col = depthColor(depth, false);
+    const bg = depth===0?'var(--e1l)':depth===1?'rgba(186,117,23,.08)':depth===2?'rgba(91,155,213,.06)':'var(--bg)';
 
     if(isGroup){
-      const col=n.color||'#3B6D11';
-      const allT=getAllDescendantTasks(n.id);
+      const allT=getAllDescTasks(n.id);
       const done=allT.filter(t=>t.status==='Done').length;
       const pct=allT.length?Math.round(done/allT.length*100):0;
-      h+=`<tr class="rn" style="cursor:pointer" oncontextmenu="showCtx(event,'${n.id}')">
-        <td style="background:${bgColor};padding-left:${10+indent}px">
-          <span style="display:inline-flex;align-items:center;gap:6px">
-            <span class="ch ${open?'o':''}" onclick="tex('${n.id}')">&#9654;</span>
-            <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${col};flex-shrink:0"></span>
-            <span style="font-weight:${fontW}">${esc(n.name)}</span>
+      h+=`<tr class="rn" oncontextmenu="showCtx(event,'${n.id}')">
+        <td style="background:${bg};padding-left:${10+indent}px">
+          <span style="display:inline-flex;align-items:center;gap:6px;cursor:pointer" onclick="tex('${n.id}')">
+            <span class="ch ${open?'o':''}">&#9654;</span>
+            <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${col.dark};flex-shrink:0"></span>
+            <span>${esc(n.name)}</span>
             <span style="font-size:10px;color:var(--text3);font-weight:400">${pct}%</span>
           </span>
         </td>
-        <td style="background:${bgColor}"></td><td style="background:${bgColor}"></td><td style="background:${bgColor}"></td>
-        <td style="background:${bgColor};font-size:11px;color:var(--text2)">${fdt(n.startDate)}</td>
-        <td style="background:${bgColor}"></td>
-        <td style="background:${bgColor}">
+        ${[...Array(5)].map(()=>`<td style="background:${bg}"></td>`).join('')}
+        <td style="background:${bg};font-size:11px;color:var(--text2)">${fdt(n.startDate)}</td>
+        <td style="background:${bg}">
           <button class="btn btn-sm" onclick="openNodeModal(null,'${n.id}','group')">+ Group</button>
-          <button class="btn btn-sm" onclick="openNodeModal(null,'${n.id}','task')" style="margin-left:3px">+ Task</button>
+          <button class="btn btn-sm" onclick="openNodeModal(null,'${n.id}','task')" style="margin-left:2px">+ Task</button>
         </td>
       </tr>`;
-      if(open)kids.forEach(k=>renderNode(k,depth+1));
+      if(open) kids.forEach(k=>rNode(k,depth+1));
     } else {
       if(!mt(n))return;tc++;
       const hasSt=(n.subtasks||[]).length>0;
@@ -396,6 +414,7 @@ function renderTable(){
         <td style="padding-left:${10+indent}px" onclick="event.stopPropagation()">
           <span style="display:inline-flex;align-items:center;gap:4px">
             ${hasSt?`<span class="ch ${stOpen?'o':''}" onclick="event.stopPropagation();tex('st_${n.id}')">&#9654;</span>`:'<span style="width:13px;display:inline-block"></span>'}
+            <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${TASK_COLOR.dark};flex-shrink:0"></span>
             ${esc(n.name)}
           </span>
           ${n.description?`<div style="font-size:10px;color:var(--text3);margin-top:1px;max-width:200px;overflow:hidden;text-overflow:ellipsis">${esc(n.description)}</div>`:''}
@@ -403,154 +422,242 @@ function renderTable(){
         <td onclick="event.stopPropagation()">${sbadge(n.status)}</td>
         <td onclick="event.stopPropagation()">${pico(n.priority)}</td>
         <td onclick="event.stopPropagation()"><div style="display:flex;gap:3px">${(n.assignees||[]).map(a=>avatar(a)).join('')}</div></td>
+        <td onclick="event.stopPropagation()" style="font-size:11px;color:var(--text2)">${fdt(n.startDate)}</td>
         <td onclick="event.stopPropagation()" style="font-size:11px;color:var(--text2)">${fdt(n.due)}</td>
         <td onclick="event.stopPropagation()">${(n.deps||[]).map(d=>`<span class="dptag" title="${esc(taskName(d))}">${esc(taskName(d))}</span>`).join(' ')}</td>
         <td onclick="event.stopPropagation()">
           <button class="btn btn-sm" onclick="openNodeModal('${n.id}')">Edit</button>
-          <button class="btn btn-sm" onclick="openAddSub('${n.id}')" style="margin-left:3px">+Sub</button>
+          <button class="btn btn-sm" onclick="openAddSub('${n.id}')" style="margin-left:2px">+Sub</button>
         </td>
       </tr>`;
       if(stOpen&&hasSt)n.subtasks.forEach(st=>{
-        h+=`<tr class="rb"><td style="padding-left:${10+indent+20}px;color:var(--text2)">&#8627; ${esc(st.name)}</td><td>${sbadge(st.status)}</td><td></td><td>${avatar(st.assignee)}</td><td style="font-size:11px;color:var(--text2)">${fdt(st.due)}</td><td></td><td><button class="btn btn-sm" onclick="editSubtask('${n.id}','${st.id}')">Edit</button></td></tr>`;
+        h+=`<tr class="rb"><td style="padding-left:${10+indent+18}px">&#8627; ${esc(st.name)}</td><td>${sbadge(st.status)}</td><td></td><td>${avatar(st.assignee)}</td><td style="font-size:11px;color:var(--text2)">${fdt(st.startDate)}</td><td style="font-size:11px;color:var(--text2)">${fdt(st.due)}</td><td></td><td><button class="btn btn-sm" onclick="editSubtask('${n.id}','${st.id}')">Edit</button></td></tr>`;
       });
     }
   }
 
-  roots.forEach(n=>renderNode(n,0));
+  roots.forEach(n=>rNode(n,0));
   h+=`</tbody></table></div>`;
   $('tc').textContent=tc+' tasks';
   return h;
 }
 
-/* ═══════════════════════════════════════════════
-   GANTT VIEW — zoom + dependency arrows
-═══════════════════════════════════════════════ */
-function zoom(dir){gzoomLevel=Math.max(0,Math.min(4,gzoomLevel+dir));$('gzlbl').textContent=ZOOM_LABELS[gzoomLevel];render()}
-
+/* ═══════════════════════════════════════════════════════════
+   GANTT VIEW
+   Key design: left panel rows and right bars share the same
+   flat row list so vertical alignment is guaranteed.
+═══════════════════════════════════════════════════════════ */
 function renderGantt(){
-  const DW=ZOOM_DW[gzoomLevel];
-  const RH=30;
+  const zl = ZOOM_LEVELS[gzoomLevel];
+  const DW = zl.colW;
 
-  // collect all tasks with due dates
-  const allT=allTasks().filter(t=>t.due);
-  if(!allT.length&&rootNodes().length===0)return empty();
+  /* 1. Build flat row list (identical order for left labels + right bars) */
+  const rowList = []; // {id, type:'group'|'task'|'subtask', name, depth, node, open}
 
-  let mn=null,mx=null;
-  allT.forEach(t=>{const d=new Date(t.due);if(!mn||d<mn)mn=new Date(d);if(!mx||d>mx)mx=new Date(d)});
-  if(!mn){const n=new Date();mn=new Date(n);mx=new Date(n);mx.setDate(mx.getDate()+14)}
-  mn.setDate(mn.getDate()-3);mx.setDate(mx.getDate()+5);
+  function collectRows(n, depth){
+    const open = ex[n.id]!==false;
+    if(n.type==='group'){
+      rowList.push({id:n.id, type:'group', name:n.name, depth, node:n, open});
+      if(open) children(n.id).forEach(c=>collectRows(c, depth+1));
+    } else {
+      rowList.push({id:n.id, type:'task', name:n.name, depth, node:n, open});
+      if(open)(n.subtasks||[]).forEach(st=>{
+        rowList.push({id:st.id, type:'subtask', name:st.name, depth:depth+1, node:st, open:false});
+      });
+    }
+  }
+  rootNodes().forEach(n=>collectRows(n,0));
 
-  const days=[];let cur=new Date(mn);
-  while(cur<=mx){days.push(new Date(cur));cur.setDate(cur.getDate()+1)}
-  const TW=days.length*DW;
+  if(!rowList.length) return empty();
 
-  function dx(ds){return ds?Math.max(0,Math.round((new Date(ds)-mn)/86400000)*DW):0}
+  /* 2. Compute timeline range */
+  const allDates = [];
+  rowList.forEach(r=>{
+    if(r.node.startDate) allDates.push(new Date(r.node.startDate));
+    if(r.node.due) allDates.push(new Date(r.node.due));
+  });
+  let mn, mx;
+  if(allDates.length){
+    mn = new Date(Math.min(...allDates));
+    mx = new Date(Math.max(...allDates));
+  } else {
+    mn = new Date(); mx = new Date();
+  }
+  mn.setDate(mn.getDate()-3);
+  mx.setDate(mx.getDate()+7);
 
-  const todayX=dx(new Date().toISOString().slice(0,10));
+  /* 3. Build columns array depending on unit */
+  const cols = []; // {label, date (start of col)}
+  if(zl.unit==='day'){
+    let cur=new Date(mn);
+    while(cur<=mx){cols.push({label:cur.getDate(), date:new Date(cur), type:'day'});cur.setDate(cur.getDate()+1)}
+  } else { // week columns
+    // snap mn to start of week (Monday)
+    let cur=new Date(mn);
+    const dow=cur.getDay(); // 0=Sun
+    cur.setDate(cur.getDate()-(dow===0?6:dow-1));
+    while(cur<=mx){
+      const label=`${cur.getDate()}/${cur.getMonth()+1}`;
+      cols.push({label, date:new Date(cur), type:'week'});
+      cur.setDate(cur.getDate()+7);
+    }
+  }
+  const TW = cols.length * DW;
 
-  // Build rows (left labels + bar positions)
-  let lh='';
-  const rowMeta=[]; // {id, type, y, barX, barW, color, name, status}
-  let rowIdx=0;
+  /* 4. x-position helpers */
+  const t0 = cols[0].date.getTime();
+  const msPerPx = (cols[cols.length-1].date.getTime()+( zl.unit==='week'?7:1)*86400000-t0)/TW;
 
-  function addGroupRow(n,depth){
-    const open=ex[n.id]!==false;
-    const col=n.color||getNodeColor(n.id);
-    const indent=depth*14;
-    const bg=depth===0?'var(--e1l)':(depth===1?'var(--bg3)':'var(--bg)');
-    lh+=`<div style="padding:5px 10px 5px ${8+indent}px;font-size:${depth===0?13:11}px;font-weight:${depth===0?600:500};border-bottom:1px solid var(--border);min-height:${RH}px;display:flex;align-items:center;gap:5px;background:${bg};white-space:nowrap;overflow:hidden;cursor:pointer" onclick="tex('${n.id}')">
-      <span class="ch ${open?'o':''}" style="font-size:9px">&#9654;</span>
-      <span style="display:inline-block;width:6px;height:6px;border-radius:1px;background:${col};flex-shrink:0"></span>
-      <span style="overflow:hidden;text-overflow:ellipsis">${esc(n.name)}</span>
-    </div>`;
-    // group bar spans all children tasks
-    const groupTasks=getAllDescendantTasks(n.id).filter(t=>t.due);
-    const gDates=groupTasks.map(t=>t.due).filter(Boolean).sort();
-    if(gDates.length){
-      const gs=gDates[0],ge=gDates.slice(-1)[0];
-      const bx=dx(gs);const bw=Math.max(DW,dx(ge)-bx+DW);
-      rowMeta.push({id:n.id,type:'group',y:rowIdx*RH,barX:bx,barW:bw,color:col,name:n.name,depth});
-    }else rowMeta.push({id:n.id,type:'group',y:rowIdx*RH,barX:-1,barW:0,color:col,name:n.name,depth});
-    rowIdx++;
-    if(open)children(n.id).forEach(c=>c.type==='group'?addGroupRow(c,depth+1):addTaskRow(c,depth+1));
+  function xOf(dateStr){
+    if(!dateStr) return -1;
+    return Math.round((new Date(dateStr).getTime()-t0)/msPerPx);
   }
 
-  function addTaskRow(t,depth){
-    const indent=depth*14;
-    lh+=`<div style="padding:5px 10px 5px ${8+indent}px;font-size:11px;border-bottom:1px solid var(--border);min-height:${RH}px;display:flex;align-items:center;gap:4px;white-space:nowrap;overflow:hidden;cursor:pointer" onclick="openPanel('${t.id}')" title="${esc(t.name)}">
-      <span style="overflow:hidden;text-overflow:ellipsis">${esc(t.name)}</span>
-    </div>`;
-    const bx=t.due?dx(t.due):-1;
-    rowMeta.push({id:t.id,type:'task',y:rowIdx*RH,barX:bx,barW:Math.max(DW*1.5,DW),color:'#378ADD',name:t.name,status:t.status,deps:t.deps||[]});
-    rowIdx++;
-    (t.subtasks||[]).forEach(st=>{
-      const bind=depth+1;
-      lh+=`<div style="padding:5px 10px 5px ${8+bind*14}px;font-size:10px;border-bottom:1px solid var(--border);min-height:${RH}px;display:flex;align-items:center;color:var(--text2);white-space:nowrap;overflow:hidden">&#8627; ${esc(st.name)}</div>`;
-      const sbx=st.due?dx(st.due):-1;
-      rowMeta.push({id:st.id,type:'subtask',y:rowIdx*RH,barX:sbx,barW:DW,color:'#BA7517',name:st.name,status:st.status,deps:[]});
-      rowIdx++;
+  /* 5. Build month header for day-unit views */
+  let monthHeader='';
+  if(zl.unit==='day'){
+    // group cols by month
+    const months=[];
+    cols.forEach((c,i)=>{
+      const mo=c.date.getMonth();const yr=c.date.getFullYear();
+      if(!months.length||months[months.length-1].mo!==mo){months.push({mo,yr,count:1})}
+      else months[months.length-1].count++;
     });
+    monthHeader=`<div class="g-month-row" style="min-width:${TW}px">`;
+    months.forEach(m=>{
+      const mo=['January','February','March','April','May','June','July','August','September','October','November','December'][m.mo];
+      monthHeader+=`<div class="g-month-cell" style="width:${m.count*DW}px">${mo} ${m.yr}</div>`;
+    });
+    monthHeader+='</div>';
   }
 
-  rootNodes().forEach(n=>n.type==='group'?addGroupRow(n,0):addTaskRow(n,0));
+  /* 6. Day/week header row */
+  let dayHeader=`<div class="g-day-row" style="min-width:${TW}px">`;
+  const todayStr=new Date().toISOString().slice(0,10);
+  const todayX=xOf(todayStr);
+  cols.forEach((c,i)=>{
+    const isToday=zl.unit==='day'&&c.date.toISOString().slice(0,10)===todayStr;
+    dayHeader+=`<div class="g-day-cell${isToday?' today-hdr':''}" style="width:${DW}px">${c.label}</div>`;
+  });
+  dayHeader+='</div>';
 
-  const bh=rowIdx*RH;
-
-  // grid lines
+  /* 7. Grid lines */
   let grid='';
-  days.forEach((d,i)=>grid+=`<div class="gg" style="left:${i*DW}px;height:${bh}px"></div>`);
+  const bh=rowList.length*ROW_H;
+  cols.forEach((c,i)=>grid+=`<div class="g-grid-line" style="left:${i*DW}px;height:${bh}px"></div>`);
+  const todayLine=todayX>=0&&todayX<=TW?`<div class="g-today-line" style="left:${todayX}px;height:${bh}px"></div>`:'';
 
-  // bars
-  let bars='';
-  rowMeta.forEach(r=>{
-    if(r.barX<0)return;
-    const top=r.y+(RH-(r.type==='group'?18:r.type==='subtask'?8:12))/2;
-    const h2=r.type==='group'?18:r.type==='subtask'?8:12;
-    const br=r.type==='group'?4:3;
-    const dn=r.status==='Done'?' dn':'';
-    bars+=`<div class="gbar${dn}" onclick="${r.type==='task'?`openPanel('${r.id}')`:'void 0'}" style="left:${r.barX}px;top:${top}px;width:${r.barW}px;height:${h2}px;border-radius:${br}px;background:${r.color}" title="${esc(r.name)}">${r.name.slice(0,Math.floor(r.barW/7))}</div>`;
+  /* 8. Left labels HTML */
+  let lblHtml='';
+  rowList.forEach(r=>{
+    const depth=r.depth;
+    const col=depthColor(depth, r.type==='task'||r.type==='subtask');
+    const indent=depth*14+8;
+    const fontW=r.type==='group'?600:400;
+    const fs=r.type==='group'&&depth===0?13:11;
+    const bg=r.type==='group'?(depth===0?'var(--e1l)':depth===1?'rgba(186,117,23,.08)':'var(--bg)'):'var(--bg)';
+    const open=r.open;
+
+    if(r.type==='group'){
+      lblHtml+=`<div class="glbl-row" style="height:${ROW_H}px;padding-left:${indent}px;background:${bg};font-size:${fs}px;font-weight:${fontW}" onclick="tex('${r.id}')" oncontextmenu="showCtx(event,'${r.id}')">
+        <span class="ch ${open?'o':''}" style="font-size:9px">&#9654;</span>
+        <span style="display:inline-block;width:7px;height:7px;border-radius:1px;background:${col.dark};flex-shrink:0"></span>
+        <span style="overflow:hidden;text-overflow:ellipsis">${esc(r.name)}</span>
+      </div>`;
+    } else if(r.type==='task'){
+      lblHtml+=`<div class="glbl-row" style="height:${ROW_H}px;padding-left:${indent}px;font-size:11px" onclick="openPanel('${r.id}')" oncontextmenu="showCtx(event,'${r.id}')">
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${col.dark};flex-shrink:0"></span>
+        <span style="overflow:hidden;text-overflow:ellipsis">${esc(r.name)}</span>
+      </div>`;
+    } else {
+      lblHtml+=`<div class="glbl-row" style="height:${ROW_H}px;padding-left:${indent}px;font-size:10px;color:var(--text2)">
+        &#8627; <span style="overflow:hidden;text-overflow:ellipsis">${esc(r.name)}</span>
+      </div>`;
+    }
   });
 
-  // dependency arrows (SVG overlay)
-  const idToRow={};rowMeta.forEach(r=>idToRow[r.id]=r);
+  /* 9. Bars + row backgrounds */
+  let barsHtml='';
+  const idToRow={};
+  rowList.forEach((r,i)=>{idToRow[r.id]=i});
+
+  rowList.forEach((r,i)=>{
+    const top=i*ROW_H;
+    const col=depthColor(r.depth, r.type==='task'||r.type==='subtask');
+    const node=r.node;
+
+    // row background stripe (alternating subtle)
+    if(i%2===0) barsHtml+=`<div style="position:absolute;left:0;top:${top}px;width:100%;height:${ROW_H}px;background:rgba(0,0,0,.012);pointer-events:none"></div>`;
+
+    const xs = xOf(node.startDate||node.due);
+    const xe = xOf(node.due);
+    if(xs<0&&xe<0) return;
+
+    const barH = r.type==='group'?14:r.type==='subtask'?8:11;
+    const barTop = top+(ROW_H-barH)/2;
+    const barR = r.type==='group'?4:3;
+
+    const x1=Math.max(0,xs>=0?xs:xe);
+    const x2=xe>=0?xe:xs;
+    const barW=Math.max(DW*0.8, x2-x1);
+
+    const dn=node.status==='Done';
+
+    // Duration bar (light color, start→due)
+    if(xs>=0&&xe>=0&&xe>xs){
+      barsHtml+=`<div style="position:absolute;left:${x1}px;top:${barTop}px;width:${barW}px;height:${barH}px;border-radius:${barR}px;background:${col.light};opacity:${dn?.45:1};z-index:2;pointer-events:none"></div>`;
+    } else {
+      // only one date — show as single block
+      barsHtml+=`<div style="position:absolute;left:${xe>=0?xe:xs}px;top:${barTop}px;width:${Math.max(DW*.7,8)}px;height:${barH}px;border-radius:${barR}px;background:${col.light};opacity:${dn?.45:1};z-index:2;pointer-events:none"></div>`;
+    }
+
+    // Due-date marker (dark color) — last DW pixels or a fixed square
+    if(xe>=0){
+      const mW=Math.min(barH, DW*.6);
+      barsHtml+=`<div style="position:absolute;left:${xe+barW-mW}px;top:${barTop}px;width:${mW}px;height:${barH}px;border-radius:0 ${barR}px ${barR}px 0;background:${col.dark};opacity:${dn?.45:1};z-index:3;pointer-events:none" title="Due: ${fdt(node.due)}"></div>`;
+    }
+
+    // Clickable hit area
+    if(r.type==='task'){
+      barsHtml+=`<div style="position:absolute;left:${x1}px;top:${top}px;width:${Math.max(barW+4,20)}px;height:${ROW_H}px;z-index:4;cursor:pointer" onclick="openPanel('${r.id}')" title="${esc(r.name)}"></div>`;
+    }
+  });
+
+  /* 10. Dependency arrows (SVG) */
   let arrows='';
-  rowMeta.forEach(r=>{
-    if(r.type!=='task'||!r.deps||!r.deps.length)return;
-    r.deps.forEach(depId=>{
-      const from=idToRow[depId];if(!from||from.barX<0||r.barX<0)return;
-      // arrow from end of 'from' bar to start of 'r' bar
-      const x1=from.barX+from.barW;
-      const y1=from.y+RH/2;
-      const x2=r.barX;
-      const y2=r.y+RH/2;
-      const midX=(x1+x2)/2;
-      arrows+=`<path d="M${x1},${y1} C${midX},${y1} ${midX},${y2} ${x2},${y2}" stroke="#993C1D" stroke-width="1.5" fill="none" opacity="0.7" marker-end="url(#arr)"/>`;
+  rowList.forEach(r=>{
+    if((r.type!=='task'&&r.type!=='subtask')||!(r.node.deps||[]).length)return;
+    const toRow=idToRow[r.id];
+    const toX=xOf(r.node.startDate||r.node.due);
+    if(toX<0)return;
+    r.node.deps.forEach(depId=>{
+      const fromIdx=idToRow[depId];if(fromIdx===undefined)return;
+      const fromNode=rowList[fromIdx].node;
+      const fromX=xOf(fromNode.due||fromNode.startDate);
+      if(fromX<0)return;
+      const y1=(fromIdx+.5)*ROW_H;
+      const y2=(toRow+.5)*ROW_H;
+      const x1=fromX+Math.min(DW*.7,10);
+      const x2=toX-2;
+      const mid=(x1+x2)/2;
+      arrows+=`<path d="M${x1},${y1} C${mid},${y1} ${mid},${y2} ${x2},${y2}" stroke="#993C1D" stroke-width="1.5" fill="none" opacity="0.65" marker-end="url(#arr)"/>`;
     });
   });
-
-  // header
-  let hdr=`<div style="height:22px;background:var(--e1l);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:600;color:var(--e1t);position:sticky;top:0;z-index:3">Timeline — ${ZOOM_LABELS[gzoomLevel]} view</div>
-  <div class="ghdr" style="min-width:${TW}px">`;
-  days.forEach(d=>hdr+=`<div class="gday" style="width:${DW}px">${d.getDate()===1?'JFMAMJJASOND'[d.getMonth()]:d.getDate()}</div>`);
-  hdr+='</div>';
-
-  const tl=todayX>=0&&todayX<=TW?`<div class="gtd" style="left:${todayX}px;height:${bh}px" title="Today"></div>`:'';
 
   return`<div class="gw">
     <div class="gl">
-      <div style="height:22px;background:var(--e1l);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:600;color:var(--e1t)">Project / Task</div>
-      ${lh}
+      <div class="gl-hdr">Project / Task</div>
+      <div class="gl-body">${lblHtml}</div>
     </div>
     <div class="gr">
-      ${hdr}
+      <div class="gr-hdr-wrap">
+        ${monthHeader}
+        ${dayHeader}
+      </div>
       <div style="position:relative;min-width:${TW}px;height:${bh}px">
-        ${grid}${tl}${bars}
+        ${grid}${todayLine}${barsHtml}
         <svg style="position:absolute;top:0;left:0;width:${TW}px;height:${bh}px;pointer-events:none;overflow:visible" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-              <path d="M0,0 L0,6 L6,3 z" fill="#993C1D" opacity="0.7"/>
-            </marker>
-          </defs>
+          <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#993C1D" opacity="0.65"/></marker></defs>
           ${arrows}
         </svg>
       </div>
@@ -558,132 +665,36 @@ function renderGantt(){
   </div>`;
 }
 
-/* ═══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════
    LIST VIEW
-═══════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════ */
 function renderList(){
   const roots=rootNodes();
   if(!roots.length)return empty();
-  let tc=0,h='<div class="lw">';
+  let tc=0;
 
-  function renderGroup(n,depth){
+  function rGrp(n,depth){
     const open=ex[n.id]!==false;
-    const col=n.color||'#3B6D11';
-    const kids=children(n.id);
-    const allT=getAllDescendantTasks(n.id);
-    const pct=allT.length?Math.round(allT.filter(t=>t.status==='Done').length/allT.length*100):0;
-    const indent=depth*16;
-    h+=`<div class="pc" style="margin-left:${indent}px">
-      <div class="ph" style="background:${depth===0?'var(--e1l)':'var(--bg3)'}" onclick="tex('${n.id}')" oncontextmenu="showCtx(event,'${n.id}')">
-        <div style="width:9px;height:9px;border-radius:2px;background:${col};flex-shrink:0"></div>
-        <h3 style="color:${depth===0?'var(--e1t)':'var(--text)'}">${esc(n.name)}</h3>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div class="pgw"><div class="pgf" style="width:${pct}%"></div></div>
-          <span style="font-size:11px;color:var(--e1t);font-weight:600">${pct}%</span>
-        </div>
-        <span class="ch ${open?'o':''}" style="font-size:10px">&#9654;</span>
-      </div>`;
-    if(open){
-      kids.forEach(k=>{
-        if(k.type==='group'){h+='</div>';renderGroup(k,depth+1);h+=`<div style="display:none">`;// hack: close/reopen
-          // actually just render inline
-        }else{
-          if(!mt(k))return;tc++;
-          const hasSt=(k.subtasks||[]).length>0;
-          const stOpen=ex['st_'+k.id];
-          const tod=new Date().toISOString().slice(0,10),od=k.due&&k.due<tod&&k.status!=='Done';
-          h+=`<div class="ti" onclick="openPanel('${k.id}')" oncontextmenu="showCtx(event,'${k.id}')">
-            <div class="cb ${k.status==='Done'?'ck':''}" onclick="event.stopPropagation();toggleDone('${k.id}')"><span class="cm">${k.status==='Done'?'&#10003;':''}</span></div>
-            <div style="flex:1;min-width:0"><div style="font-weight:500">${esc(k.name)}</div>${k.description?`<div style="font-size:11px;color:var(--text3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(k.description)}</div>`:''}</div>
-            <div style="display:flex;align-items:center;gap:7px;flex-shrink:0" onclick="event.stopPropagation()">
-              ${pico(k.priority)} ${sbadge(k.status)}
-              ${k.due?`<span class="dc ${od?'od':''}">${fdt(k.due)}</span>`:''}
-              <div style="display:flex;gap:2px">${(k.assignees||[]).map(a=>avatar(a,20)).join('')}</div>
-              ${hasSt?`<span onclick="event.stopPropagation();tex('st_${k.id}')" style="cursor:pointer;font-size:10px;color:var(--text3)">${stOpen?'&#9650;':'&#9660;'}${k.subtasks.length}</span>`:''}
-            </div>
-          </div>`;
-          if(stOpen&&hasSt)k.subtasks.forEach(st=>{
-            h+=`<div style="display:flex;align-items:center;gap:10px;padding:6px 14px 6px 42px;border-bottom:1px solid var(--border);font-size:11px;color:var(--text2);background:var(--bg3)">
-              <div class="cb ${st.status==='Done'?'ck':''}"><span class="cm">${st.status==='Done'?'&#10003;':''}</span></div>
-              <div style="flex:1">&#8627; ${esc(st.name)}</div>
-              <div style="display:flex;align-items:center;gap:6px">${sbadge(st.status)} ${st.due?`<span class="dc">${fdt(st.due)}</span>`:''} ${avatar(st.assignee,18)}</div>
-            </div>`;
-          });
-        }
-      });
-    }
-    h+=`</div>`;
-  }
-
-  // Cleaner list render - just use a flat approach for list view
-  h='<div class="lw">';
-  roots.forEach(n=>{
-    if(n.type==='group')renderGroupClean(n,0);
-    else if(mt(n)){tc++;h+=renderTaskItem(n)}
-  });
-  h+='</div>';
-  $('tc').textContent=tc+' tasks';
-  return h;
-
-  function renderGroupClean(n,depth){/* defined below */}
-  function renderTaskItem(t){return''}
-}
-
-// Cleaner separate list renderer
-function _renderList(){
-  const roots=rootNodes();
-  if(!roots.length)return empty();
-  let tc=0;const parts=[];
-
-  function renderGrp(n,depth){
-    const open=ex[n.id]!==false;
-    const col=n.color||'#3B6D11';
-    const allT=getAllDescendantTasks(n.id);
+    const col=depthColor(depth,false);
+    const allT=getAllDescTasks(n.id);
     const pct=allT.length?Math.round(allT.filter(t=>t.status==='Done').length/allT.length*100):0;
     const ml=depth*14;
-    let html=`<div class="pc" style="margin-left:${ml}px;margin-bottom:8px">
-      <div class="ph" style="background:${depth===0?'var(--e1l)':'var(--bg3)'}" onclick="tex('${n.id}')" oncontextmenu="showCtx(event,'${n.id}')">
-        <div style="width:9px;height:9px;border-radius:2px;background:${col};flex-shrink:0"></div>
+    const bg=depth===0?'var(--e1l)':depth===1?'rgba(186,117,23,.1)':'var(--bg3)';
+    let h=`<div class="pc" style="margin-left:${ml}px;margin-bottom:8px">
+      <div class="ph" style="background:${bg}" onclick="tex('${n.id}')" oncontextmenu="showCtx(event,'${n.id}')">
+        <div style="width:9px;height:9px;border-radius:2px;background:${col.dark};flex-shrink:0"></div>
         <h3 style="color:${depth===0?'var(--e1t)':'var(--text)'}">${esc(n.name)}</h3>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div class="pgw"><div class="pgf" style="width:${pct}%"></div></div>
-          <span style="font-size:11px;color:var(--e1t);font-weight:600">${pct}%</span>
-        </div>
-        <span class="ch ${open?'o':''}" style="font-size:10px">&#9654;</span>
-      </div>`;
-    if(open){
-      const kids=children(n.id);
-      kids.forEach(k=>{
-        if(k.type==='group'){html+='</div>';html+=renderGrpStr(k,depth+1);html+=`<div style="display:none">`;}
-        else{if(!mt(k))return;tc++;html+=renderTI(k);}
-      });
-    }
-    html+=`</div>`;
-    return html;
-  }
-  function renderGrpStr(n,depth){
-    const open=ex[n.id]!==false;
-    const col=n.color||'#3B6D11';
-    const allT=getAllDescendantTasks(n.id);
-    const pct=allT.length?Math.round(allT.filter(t=>t.status==='Done').length/allT.length*100):0;
-    const ml=depth*14;
-    let html=`<div class="pc" style="margin-left:${ml}px;margin-bottom:6px">
-      <div class="ph" style="background:var(--bg3)" onclick="tex('${n.id}')" oncontextmenu="showCtx(event,'${n.id}')">
-        <div style="width:8px;height:8px;border-radius:2px;background:${col};flex-shrink:0"></div>
-        <h3 style="font-size:12px;color:var(--text)">${esc(n.name)}</h3>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div class="pgw"><div class="pgf" style="width:${pct}%"></div></div>
-          <span style="font-size:11px;font-weight:600;color:var(--e1t)">${pct}%</span>
-        </div>
+        <div style="display:flex;align-items:center;gap:8px"><div class="pgw"><div class="pgf" style="width:${pct}%;background:${col.dark}"></div></div><span style="font-size:11px;font-weight:600;color:${col.dark}">${pct}%</span></div>
         <span class="ch ${open?'o':''}" style="font-size:10px">&#9654;</span>
       </div>`;
     if(open)children(n.id).forEach(k=>{
-      if(k.type==='group'){html+='</div>';html+=renderGrpStr(k,depth+1);html+=`<div style="display:none">`;}
-      else{if(!mt(k))return;tc++;html+=renderTI(k);}
+      if(k.type==='group'){h+=`</div>${rGrp(k,depth+1)}<div style="display:none">`;}
+      else if(mt(k)){tc++;h+=rTask(k);}
     });
-    html+=`</div>`;return html;
+    h+=`</div>`;return h;
   }
-  function renderTI(t){
+
+  function rTask(t){
     const hasSt=(t.subtasks||[]).length>0;
     const stOpen=ex['st_'+t.id];
     const tod=new Date().toISOString().slice(0,10),od=t.due&&t.due<tod&&t.status!=='Done';
@@ -708,50 +719,48 @@ function _renderList(){
   }
 
   let html='<div class="lw">';
-  roots.forEach(n=>{
-    if(n.type==='group')html+=renderGrp(n,0);
-    else if(mt(n)){tc++;html+=renderTI(n);}
-  });
+  roots.forEach(n=>{html+=n.type==='group'?rGrp(n,0):mt(n)?(tc++,rTask(n)):''});
   html+='</div>';
   $('tc').textContent=tc+' tasks';
   return html;
 }
 
+/* ─── EMPTY STATE ─── */
 function empty(){$('tc').textContent='0 tasks';return`<div style="padding:60px 24px;text-align:center;color:var(--text2)"><div style="width:48px;height:48px;border-radius:50%;background:var(--e1l);margin:0 auto 14px;display:flex;align-items:center;justify-content:center"><div class="leaf" style="width:18px;height:18px"></div></div><div style="font-size:15px;font-weight:600;margin-bottom:6px;color:var(--text)">No content yet</div><div style="font-size:13px;margin-bottom:20px">Create a group or task to get started.</div><div style="display:flex;gap:10px;justify-content:center"><button class="btn btn-p" onclick="openNodeModal(null,null,'group')">+ New group</button><button class="btn" onclick="openNodeModal(null,null,'task')">+ New task</button></div></div>`}
 
-function toggleDone(id){const n=nodes.find(x=>x.id===id);if(n)n.status=n.status==='Done'?'In progress':'Done';save();render()}
-
-/* ─── RENDER ROUTER ─── */
 function render(){
   const c=$('content');if(!c)return;
   $('gzoom-ctrl').style.display=cv==='gantt'?'flex':'none';
   if(cv==='table')c.innerHTML=renderTable();
   else if(cv==='gantt')c.innerHTML=renderGantt();
-  else c.innerHTML=_renderList();
+  else c.innerHTML=renderList();
 }
 
-/* ═══════════════════════════════════════════════
-   CONTEXT MENU (right-click on any node)
-═══════════════════════════════════════════════ */
+function toggleDone(id){const n=nodes.find(x=>x.id===id);if(n)n.status=n.status==='Done'?'In progress':'Done';save();render()}
+
+/* ═══════════════════════════════════════════════════════════
+   CONTEXT MENU
+═══════════════════════════════════════════════════════════ */
 function showCtx(e,id){
   e.preventDefault();e.stopPropagation();
   closeCtx();
   const n=nodes.find(x=>x.id===id);if(!n)return;
   const isGroup=n.type==='group';
-  let html=`<div class="ctxmenu" id="ctxmenu" style="top:${e.clientY}px;left:${e.clientX}px">`;
+  let h=`<div class="ctxmenu" id="ctxmenu" style="top:${Math.min(e.clientY,window.innerHeight-220)}px;left:${Math.min(e.clientX,window.innerWidth-180)}px">`;
   if(isGroup){
-    html+=`<div class="ctxi" onclick="closeCtx();openNodeModal(null,'${id}','group')">+ Add sub-group</div>`;
-    html+=`<div class="ctxi" onclick="closeCtx();openNodeModal(null,'${id}','task')">+ Add task</div>`;
-    html+=`<div class="ctxi" onclick="closeCtx();openNodeModal('${id}')">&#9998; Rename / edit</div>`;
+    h+=`<div class="ctxi" onclick="closeCtx();openNodeModal(null,'${id}','group')">+ Add sub-group</div>`;
+    h+=`<div class="ctxi" onclick="closeCtx();openNodeModal(null,'${id}','task')">+ Add task</div>`;
+    h+=`<div class="ctxsep"></div>`;
+    h+=`<div class="ctxi" onclick="closeCtx();openNodeModal('${id}')">&#9998; Rename / edit</div>`;
   }else{
-    html+=`<div class="ctxi" onclick="closeCtx();openPanel('${id}')">&#128065; View details</div>`;
-    html+=`<div class="ctxi" onclick="closeCtx();openNodeModal('${id}')">&#9998; Edit task</div>`;
-    html+=`<div class="ctxi" onclick="closeCtx();openAddSub('${id}')">+ Add sub-task</div>`;
+    h+=`<div class="ctxi" onclick="closeCtx();openPanel('${id}')">&#128065; View details</div>`;
+    h+=`<div class="ctxi" onclick="closeCtx();openNodeModal('${id}')">&#9998; Edit task</div>`;
+    h+=`<div class="ctxi" onclick="closeCtx();openAddSub('${id}')">+ Add sub-task</div>`;
   }
-  html+=`<div style="border-top:1px solid var(--border);margin:4px 0"></div>`;
-  html+=`<div class="ctxi danger" onclick="closeCtx();deleteNode('${id}')">&#128465; Delete</div>`;
-  html+=`</div>`;
-  $('ctx').innerHTML=html;
+  h+=`<div class="ctxsep"></div>`;
+  h+=`<div class="ctxi danger" onclick="closeCtx();deleteNode('${id}')">&#128465; Delete</div>`;
+  h+=`</div>`;
+  $('ctx').innerHTML=h;
   setTimeout(()=>document.addEventListener('click',closeCtx,{once:true}),10);
 }
 function closeCtx(){$('ctx').innerHTML=''}
@@ -760,17 +769,13 @@ function deleteNode(id){
   const n=nodes.find(x=>x.id===id);if(!n)return;
   const msg=n.type==='group'?`Delete "${n.name}" and all its contents?`:`Delete task "${n.name}"?`;
   if(!confirm(msg))return;
-  function removeTree(nid){
-    children(nid).forEach(c=>removeTree(c.id));
-    nodes=nodes.filter(x=>x.id!==nid);
-  }
-  removeTree(id);
-  save();render();
+  function rm(nid){children(nid).forEach(c=>rm(c.id));nodes=nodes.filter(x=>x.id!==nid)}
+  rm(id);save();render();
 }
 
-/* ═══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════
    PANEL
-═══════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════ */
 function openPanel(id){
   const t=nodes.find(n=>n.id===id);if(!t||t.type!=='task')return;
   const path=getPath(id);
@@ -786,9 +791,10 @@ function openPanel(id){
       ${t.description?`<div><div class="pnl">Description</div><div class="pnd">${esc(t.description)}</div></div>`:''}
       <div><div class="pnl">Assignees</div><div style="display:flex;flex-direction:column;gap:6px;margin-top:2px">${asH}</div></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><div class="pnl">Start date</div><div style="font-size:13px">${fdt(t.startDate)||'—'}</div></div>
         <div><div class="pnl">Due date</div><div style="font-size:13px">${fdt(t.due)||'—'}</div></div>
-        <div><div class="pnl">Priority</div><div style="font-size:13px">${t.priority||'—'}</div></div>
       </div>
+      <div><div class="pnl">Priority</div><div style="font-size:13px">${t.priority||'—'}</div></div>
       <div><div class="pnl">Dependencies</div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">${deps}</div></div>
       ${(t.subtasks||[]).length?`<div><div class="pnl">Sub-tasks (${t.subtasks.length})</div><div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">${t.subtasks.map(st=>`<div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:7px 10px;background:var(--bg3);border-radius:var(--r)"><div class="cb ${st.status==='Done'?'ck':''}" onclick="tsd('${id}','${st.id}')" style="flex-shrink:0"><span class="cm">${st.status==='Done'?'&#10003;':''}</span></div><span style="flex:1">${esc(st.name)}</span>${sbadge(st.status)} ${st.assignee?avatar(st.assignee,18):''}</div>`).join('')}</div></div>`:''}
     </div>
@@ -798,16 +804,14 @@ function openPanel(id){
 function closePanel(){$('panel').innerHTML=''}
 function tsd(tid,sid){const t=nodes.find(n=>n.id===tid);if(!t)return;const st=(t.subtasks||[]).find(s=>s.id===sid);if(st)st.status=st.status==='Done'?'To do':'Done';save();render();openPanel(tid)}
 
-/* ═══════════════════════════════════════════════
-   MODAL — unified for groups and tasks
-═══════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   NODE MODAL (groups + tasks)
+═══════════════════════════════════════════════════════════ */
 function openNodeModal(editId, parentId, forcedType){
   const n=editId?nodes.find(x=>x.id===editId):null;
   const type=n?n.type:(forcedType||'task');
-
-  // Parent options (for moving a node)
-  const groupOpts=nodes.filter(x=>x.type==='group'&&x.id!==editId).map(x=>`<option value="${x.id}" ${n&&n.parentId===x.id?'selected':''}>${esc(getPath(x.id)?getPath(x.id)+' / '+x.name:x.name)}</option>`).join('');
-
+  const groupOpts=nodes.filter(x=>x.type==='group'&&x.id!==editId)
+    .map(x=>`<option value="${x.id}" ${n&&n.parentId===x.id?'selected':''}>${esc(getPath(x.id)?getPath(x.id)+' / '+x.name:x.name)}</option>`).join('');
   $('mdl').innerHTML=`<div class="mo" onclick="if(event.target===this)closeMdl()"><div class="md">
     <button class="xbtn" onclick="closeMdl()" style="position:absolute;top:14px;right:14px">&#10005;</button>
     <h2>${n?(type==='group'?'Edit group':'Edit task'):(type==='group'?'New group':'New task')}</h2>
@@ -817,7 +821,6 @@ function openNodeModal(editId, parentId, forcedType){
       <button class="btn btn-p" onclick="saveNode('${editId||''}','${parentId||''}','${type}')">${n?'Save changes':'Create'}</button>
     </div></div>
   </div></div>`;
-
   window._mc={n,type,parentId,groupOpts};
   buildModalFields();
 }
@@ -826,17 +829,14 @@ function buildModalFields(){
   const{n,type,parentId,groupOpts}=window._mc||{};
   const f=$('mf');if(!f)return;
   const par=n?n.parentId:(parentId||'');
-
   if(type==='group'){
     f.innerHTML=`
       <div class="fg"><label>Group name</label><input id="mn" value="${n?esc(n.name):''}" placeholder="e.g. Opening Weekend"></div>
       <div class="fr">
-        <div class="fg"><label>Color</label><select id="mc">${GCOLS.map(c=>`<option value="${c.v}" ${n&&n.color===c.v?'selected':''}>${c.l}</option>`).join('')}</select></div>
         <div class="fg"><label>Start date</label><input type="date" id="msd" value="${n?n.startDate||'':''}"></div>
+        <div class="fg"><label>Color override <span style="font-weight:400;text-transform:none;font-size:10px">(optional)</span></label><select id="mc"><option value="">Auto (by depth)</option>${GCOLS.map(c=>`<option value="${c.v}" ${n&&n.color===c.v?'selected':''}>${c.l}</option>`).join('')}</select></div>
       </div>
-      <div class="fg"><label>Parent group <span style="font-weight:400;text-transform:none;font-size:10px">(leave empty for top-level)</span></label>
-        <select id="mpar"><option value="">— top level —</option>${groupOpts}</select>
-      </div>`;
+      <div class="fg"><label>Parent group <span style="font-weight:400;text-transform:none;font-size:10px">(empty = top level)</span></label><select id="mpar"><option value="">— top level —</option>${groupOpts}</select></div>`;
     if(par)setTimeout(()=>{const el=$('mpar');if(el)el.value=par},0);
   } else {
     const flatT=flatTasksExcl(n?n.id:null);
@@ -849,10 +849,11 @@ function buildModalFields(){
         <div class="fg"><label>Priority</label><select id="mpr">${['High','Med','Low'].map(s=>`<option ${n&&n.priority===s?'selected':''}>${s}</option>`).join('')}</select></div>
       </div>
       <div class="fr">
+        <div class="fg"><label>Start date</label><input type="date" id="msd" value="${n?n.startDate||'':''}"></div>
         <div class="fg"><label>Due date</label><input type="date" id="mdu" value="${n?n.due||'':''}"></div>
-        <div class="fg"><label>Assignees <span style="font-weight:400;text-transform:none;font-size:10px">(Ctrl/Cmd+click)</span></label>
-          <select id="masn" multiple>${Object.keys(TEAM).map(nm=>`<option ${n&&(n.assignees||[]).includes(nm)?'selected':''}>${nm}</option>`).join('')}</select>
-        </div>
+      </div>
+      <div class="fg"><label>Assignees <span style="font-weight:400;text-transform:none;font-size:10px">(Ctrl/Cmd+click for multiple)</span></label>
+        <select id="masn" multiple>${Object.keys(TEAM).map(nm=>`<option ${n&&(n.assignees||[]).includes(nm)?'selected':''}>${nm}</option>`).join('')}</select>
       </div>
       <div class="fg">
         <label>Must be completed after</label>
@@ -866,18 +867,17 @@ function buildModalFields(){
 function saveNode(editId, parentId, type){
   const name=($('mn')||{}).value||'';if(!name.trim())return;
   const par=($('mpar')||{}).value||parentId||null;
-
   if(editId){
     const n=nodes.find(x=>x.id===editId);if(!n)return;
-    n.name=name.trim();
-    n.parentId=par||null;
+    n.name=name.trim();n.parentId=par||null;
     if(type==='group'){
-      n.color=($('mc')||{}).value||n.color||'#3B6D11';
+      n.color=($('mc')||{}).value||null;
       n.startDate=($('msd')||{}).value||'';
     }else{
       n.description=($('mde')||{}).value||'';
       n.status=($('mst')||{}).value||'To do';
       n.priority=($('mpr')||{}).value||'Med';
+      n.startDate=($('msd')||{}).value||'';
       n.due=($('mdu')||{}).value||'';
       n.deps=getDeps();
       const as=$('masn');n.assignees=as?[...as.selectedOptions].map(o=>o.value):[];
@@ -885,10 +885,10 @@ function saveNode(editId, parentId, type){
   }else{
     const id=nid();ex[id]=true;
     if(type==='group'){
-      nodes.push({id,type:'group',name:name.trim(),parentId:par||null,color:($('mc')||{}).value||'#3B6D11',startDate:($('msd')||{}).value||''});
+      nodes.push({id,type:'group',name:name.trim(),parentId:par||null,color:($('mc')||{}).value||null,startDate:($('msd')||{}).value||''});
     }else{
       const as=$('masn');
-      nodes.push({id,type:'task',name:name.trim(),parentId:par||null,description:($('mde')||{}).value||'',status:($('mst')||{}).value||'To do',priority:($('mpr')||{}).value||'Med',due:($('mdu')||{}).value||'',deps:getDeps(),assignees:as?[...as.selectedOptions].map(o=>o.value):[],subtasks:[]});
+      nodes.push({id,type:'task',name:name.trim(),parentId:par||null,description:($('mde')||{}).value||'',status:($('mst')||{}).value||'To do',priority:($('mpr')||{}).value||'Med',startDate:($('msd')||{}).value||'',due:($('mdu')||{}).value||'',deps:getDeps(),assignees:as?[...as.selectedOptions].map(o=>o.value):[],subtasks:[]});
     }
   }
   save();closeMdl();render();
@@ -896,7 +896,6 @@ function saveNode(editId, parentId, type){
 
 /* ─── SUBTASKS ─── */
 function openAddSub(tid){
-  const to=nodes.filter(n=>n.type==='task').map(t=>`<option value="${t.id}" ${t.id===tid?'selected':''}>${esc(t.name)}</option>`).join('');
   $('mdl').innerHTML=`<div class="mo" onclick="if(event.target===this)closeMdl()"><div class="md"><button class="xbtn" onclick="closeMdl()" style="position:absolute;top:14px;right:14px">&#10005;</button><h2>New sub-task</h2><div id="mf">${stF(null,tid)}</div><div class="ma"><div></div><div style="display:flex;gap:8px"><button class="btn" onclick="closeMdl()">Cancel</button><button class="btn btn-p" onclick="saveSt('${tid}','')">Create</button></div></div></div></div>`;
 }
 function editSubtask(tid,sid){
@@ -924,14 +923,6 @@ function saveSt(tid,sid){
   save();closeMdl();render();
 }
 function closeMdl(){$('mdl').innerHTML='';window._mc=null}
-
-function getDeps(){return[...document.querySelectorAll('.depk input:checked')].map(b=>b.value)}
-
-function init(){
-  $('gzlbl').textContent=ZOOM_LABELS[gzoomLevel];
-  const u=localStorage.getItem(LS_URL);
-  if(u){apiUrl=u;$('setup').style.display='none';$('app').classList.add('on');loadLocal();render();pull();}
-}
 
 init();
 </script>
