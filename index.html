@@ -92,29 +92,36 @@ td{padding:6px 10px;border-bottom:1px solid var(--border);vertical-align:middle;
 .rn td{font-weight:600}.rn:hover td,.rt:hover td{background:var(--bg3)!important}
 .rt td{background:var(--bg)}.rb td{color:var(--text2)}
 
-/* GANTT */
+/* GANTT — unified scroll architecture
+   Structure:
+   .gw                        flex row, full height, overflow hidden
+     .g-left-col              fixed 260px, flex col, overflow hidden
+       .g-left-hdr            sticky header (matches right header height exactly)
+       .g-left-body           scrollable labels — scroll synced to .g-right-body via JS
+     .g-right-col             flex 1, flex col, overflow hidden
+       .g-right-hdr           sticky header (month + day rows)
+       .g-right-body          scrollable bars area (horizontal + vertical)
+*/
 .gw{display:flex;height:100%;overflow:hidden}
-.gl{width:260px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column}
-.gl-hdr{height:48px;flex-shrink:0;background:var(--e1l);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:600;color:var(--e1t)}
-.gl-body{flex:1;overflow-y:auto;overflow-x:hidden}
-.gr{flex:1;overflow:auto;position:relative}
-.gr-hdr-wrap{position:sticky;top:0;z-index:4;background:var(--bg3)}
-.g-month-row{display:flex;border-bottom:1px solid var(--border);min-height:24px}
+.g-left-col{width:260px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.g-left-hdr{flex-shrink:0;background:var(--e1l);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:600;color:var(--e1t)}
+.g-left-body{flex:1;overflow:hidden} /* NO scroll here — synced via JS */
+.g-left-inner{} /* natural height = rows */
+.g-right-col{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.g-right-hdr{flex-shrink:0;overflow:hidden;background:var(--bg3);border-bottom:1px solid var(--border)}
+.g-right-hdr-inner{display:flex;flex-direction:column} /* scrolled horizontally with body */
+.g-right-body{flex:1;overflow:auto} /* both scroll axes */
+.g-month-row{display:flex;border-bottom:1px solid var(--border)}
 .g-month-cell{font-size:10px;font-weight:600;color:var(--e1t);border-right:1px solid var(--border);padding:4px 6px;flex-shrink:0;background:var(--e1l);white-space:nowrap;overflow:hidden}
-.g-day-row{display:flex;border-bottom:1px solid var(--border);min-height:24px}
+.g-day-row{display:flex}
 .g-day-cell{font-size:10px;color:var(--text2);border-right:1px solid var(--border);text-align:center;padding:4px 0;flex-shrink:0;font-weight:400}
 .g-day-cell.today-hdr{background:var(--e4l);color:var(--e4t);font-weight:700}
-.grow{border-bottom:1px solid var(--border);position:relative}
-.gbar-bg{height:10px;border-radius:3px;position:absolute;top:50%;transform:translateY(-50%)}
-.gbar-due{width:10px;height:10px;border-radius:2px;position:absolute;top:50%;transform:translateY(-50%)}
 .g-today-line{position:absolute;top:0;bottom:0;width:2px;background:var(--e4);opacity:.7;z-index:3;pointer-events:none}
 .g-grid-line{position:absolute;top:0;bottom:0;width:1px;background:var(--border);pointer-events:none;opacity:.35}
 .gzoom{display:flex;align-items:center;gap:6px}
 .gzoom button{width:26px;height:26px;border-radius:var(--r);border:1px solid var(--border2);background:var(--bg);color:var(--text);cursor:pointer;font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center}
 .gzoom button:hover{background:var(--bg3)}
 #gzlbl{min-width:42px;text-align:center;font-size:11px;font-weight:600;color:var(--text2)}
-
-/* GLBL rows must match GROW height */
 .glbl-row{border-bottom:1px solid var(--border);display:flex;align-items:center;gap:5px;padding:0 8px;white-space:nowrap;overflow:hidden;cursor:pointer;user-select:none}
 .glbl-row:hover{background:var(--bg3)}
 
@@ -444,16 +451,24 @@ function renderTable(){
 
 /* ═══════════════════════════════════════════════════════════
    GANTT VIEW
-   Key design: left panel rows and right bars share the same
-   flat row list so vertical alignment is guaranteed.
+   Alignment guarantee:
+   - Both left labels and right bars iterate the SAME rowList
+     in the same order, each row exactly ROW_H px tall.
+   - Left panel overflows hidden; its scroll is driven by JS
+     synced to the right panel's scrollTop.
+   - Right panel header scrolls horizontally with the body
+     via a shared wrapper.
+   Due-date marker fix:
+   - xe = pixel x of the due date column start
+   - The dark marker always covers [xe .. xe+DW], i.e. the
+     exact column that owns the due date — never offset by barW.
 ═══════════════════════════════════════════════════════════ */
 function renderGantt(){
   const zl = ZOOM_LEVELS[gzoomLevel];
-  const DW = zl.colW;
+  const DW = zl.colW; // pixels per column
 
-  /* 1. Build flat row list (identical order for left labels + right bars) */
-  const rowList = []; // {id, type:'group'|'task'|'subtask', name, depth, node, open}
-
+  /* ── 1. Flat row list ── */
+  const rowList = [];
   function collectRows(n, depth){
     const open = ex[n.id]!==false;
     if(n.type==='group'){
@@ -467,100 +482,94 @@ function renderGantt(){
     }
   }
   rootNodes().forEach(n=>collectRows(n,0));
-
   if(!rowList.length) return empty();
 
-  /* 2. Compute timeline range */
-  const allDates = [];
+  /* ── 2. Date range ── */
+  const allDates=[];
   rowList.forEach(r=>{
     if(r.node.startDate) allDates.push(new Date(r.node.startDate));
-    if(r.node.due) allDates.push(new Date(r.node.due));
+    if(r.node.due)       allDates.push(new Date(r.node.due));
   });
-  let mn, mx;
-  if(allDates.length){
-    mn = new Date(Math.min(...allDates));
-    mx = new Date(Math.max(...allDates));
-  } else {
-    mn = new Date(); mx = new Date();
-  }
+  let mn=new Date(), mx=new Date();
+  if(allDates.length){ mn=new Date(Math.min(...allDates)); mx=new Date(Math.max(...allDates)); }
+  // normalize to midnight UTC to avoid timezone drift
+  function toMidnight(d){ const c=new Date(d); c.setHours(0,0,0,0); return c; }
+  mn=toMidnight(mn); mx=toMidnight(mx);
   mn.setDate(mn.getDate()-3);
   mx.setDate(mx.getDate()+7);
 
-  /* 3. Build columns array depending on unit */
-  const cols = []; // {label, date (start of col)}
+  /* ── 3. Column array ── */
+  const cols=[];
   if(zl.unit==='day'){
     let cur=new Date(mn);
-    while(cur<=mx){cols.push({label:cur.getDate(), date:new Date(cur), type:'day'});cur.setDate(cur.getDate()+1)}
-  } else { // week columns
-    // snap mn to start of week (Monday)
+    while(cur<=mx){ cols.push({label:cur.getDate(), date:new Date(cur)}); cur.setDate(cur.getDate()+1); }
+  } else {
+    // week columns — snap to Monday
     let cur=new Date(mn);
-    const dow=cur.getDay(); // 0=Sun
+    const dow=cur.getDay();
     cur.setDate(cur.getDate()-(dow===0?6:dow-1));
+    cur=toMidnight(cur);
     while(cur<=mx){
-      const label=`${cur.getDate()}/${cur.getMonth()+1}`;
-      cols.push({label, date:new Date(cur), type:'week'});
+      cols.push({label:`${cur.getDate()}/${cur.getMonth()+1}`, date:new Date(cur)});
       cur.setDate(cur.getDate()+7);
     }
   }
-  const TW = cols.length * DW;
+  const TW=cols.length*DW;
 
-  /* 4. x-position helpers */
+  /* ── 4. x-position helper ──
+     Each column col[i] covers [col[i].date … col[i+1].date).
+     xOf returns the left edge of the column that contains dateStr.
+     This guarantees the due marker sits exactly on the right column
+     regardless of zoom level — no floating-point drift. */
+  const colMs = zl.unit==='day' ? 86400000 : 7*86400000;
   const t0 = cols[0].date.getTime();
-  const msPerPx = (cols[cols.length-1].date.getTime()+( zl.unit==='week'?7:1)*86400000-t0)/TW;
-
   function xOf(dateStr){
     if(!dateStr) return -1;
-    return Math.round((new Date(dateStr).getTime()-t0)/msPerPx);
+    const d = toMidnight(new Date(dateStr));
+    const idx = Math.floor((d.getTime()-t0)/colMs);
+    if(idx<0) return 0;           // clamp to left edge
+    if(idx>=cols.length) return TW-DW; // clamp to right edge
+    return idx*DW;
   }
 
-  /* 5. Build month header for day-unit views */
+  /* ── 5. Headers ── */
   let monthHeader='';
   if(zl.unit==='day'){
-    // group cols by month
     const months=[];
-    cols.forEach((c,i)=>{
-      const mo=c.date.getMonth();const yr=c.date.getFullYear();
-      if(!months.length||months[months.length-1].mo!==mo){months.push({mo,yr,count:1})}
+    cols.forEach(c=>{
+      const mo=c.date.getMonth(), yr=c.date.getFullYear();
+      if(!months.length||months[months.length-1].mo!==mo) months.push({mo,yr,count:1});
       else months[months.length-1].count++;
     });
-    monthHeader=`<div class="g-month-row" style="min-width:${TW}px">`;
-    months.forEach(m=>{
-      const mo=['January','February','March','April','May','June','July','August','September','October','November','December'][m.mo];
-      monthHeader+=`<div class="g-month-cell" style="width:${m.count*DW}px">${mo} ${m.yr}</div>`;
-    });
+    const MNAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    monthHeader=`<div class="g-month-row" style="width:${TW}px">`;
+    months.forEach(m=>{ monthHeader+=`<div class="g-month-cell" style="width:${m.count*DW}px">${MNAMES[m.mo]} ${m.yr}</div>`; });
     monthHeader+='</div>';
   }
-
-  /* 6. Day/week header row */
-  let dayHeader=`<div class="g-day-row" style="min-width:${TW}px">`;
   const todayStr=new Date().toISOString().slice(0,10);
-  const todayX=xOf(todayStr);
-  cols.forEach((c,i)=>{
+  let dayHeader=`<div class="g-day-row" style="width:${TW}px">`;
+  cols.forEach(c=>{
     const isToday=zl.unit==='day'&&c.date.toISOString().slice(0,10)===todayStr;
     dayHeader+=`<div class="g-day-cell${isToday?' today-hdr':''}" style="width:${DW}px">${c.label}</div>`;
   });
   dayHeader+='</div>';
 
-  /* 7. Grid lines */
-  let grid='';
+  /* ── 6. Grid ── */
   const bh=rowList.length*ROW_H;
-  cols.forEach((c,i)=>grid+=`<div class="g-grid-line" style="left:${i*DW}px;height:${bh}px"></div>`);
-  const todayLine=todayX>=0&&todayX<=TW?`<div class="g-today-line" style="left:${todayX}px;height:${bh}px"></div>`:'';
+  let grid='';
+  cols.forEach((_,i)=>grid+=`<div class="g-grid-line" style="left:${i*DW}px;height:${bh}px"></div>`);
+  const todayX=xOf(todayStr);
+  const todayLine=`<div class="g-today-line" style="left:${todayX}px;height:${bh}px"></div>`;
 
-  /* 8. Left labels HTML */
+  /* ── 7. Left labels ── */
   let lblHtml='';
   rowList.forEach(r=>{
-    const depth=r.depth;
-    const col=depthColor(depth, r.type==='task'||r.type==='subtask');
-    const indent=depth*14+8;
-    const fontW=r.type==='group'?600:400;
-    const fs=r.type==='group'&&depth===0?13:11;
-    const bg=r.type==='group'?(depth===0?'var(--e1l)':depth===1?'rgba(186,117,23,.08)':'var(--bg)'):'var(--bg)';
-    const open=r.open;
-
+    const col=depthColor(r.depth, r.type!=='group');
+    const indent=r.depth*14+8;
+    const bg=r.type==='group'?(r.depth===0?'var(--e1l)':r.depth===1?'rgba(186,117,23,.08)':'var(--bg)'):'var(--bg)';
     if(r.type==='group'){
-      lblHtml+=`<div class="glbl-row" style="height:${ROW_H}px;padding-left:${indent}px;background:${bg};font-size:${fs}px;font-weight:${fontW}" onclick="tex('${r.id}')" oncontextmenu="showCtx(event,'${r.id}')">
-        <span class="ch ${open?'o':''}" style="font-size:9px">&#9654;</span>
+      lblHtml+=`<div class="glbl-row" style="height:${ROW_H}px;padding-left:${indent}px;background:${bg};font-size:${r.depth===0?13:11}px;font-weight:600" onclick="tex('${r.id}')" oncontextmenu="showCtx(event,'${r.id}')">
+        <span class="ch ${r.open?'o':''}" style="font-size:9px">&#9654;</span>
         <span style="display:inline-block;width:7px;height:7px;border-radius:1px;background:${col.dark};flex-shrink:0"></span>
         <span style="overflow:hidden;text-overflow:ellipsis">${esc(r.name)}</span>
       </div>`;
@@ -571,95 +580,104 @@ function renderGantt(){
       </div>`;
     } else {
       lblHtml+=`<div class="glbl-row" style="height:${ROW_H}px;padding-left:${indent}px;font-size:10px;color:var(--text2)">
-        &#8627; <span style="overflow:hidden;text-overflow:ellipsis">${esc(r.name)}</span>
+        &#8627;<span style="overflow:hidden;text-overflow:ellipsis;margin-left:4px">${esc(r.name)}</span>
       </div>`;
     }
   });
 
-  /* 9. Bars + row backgrounds */
-  let barsHtml='';
+  /* ── 8. Bars ── */
   const idToRow={};
-  rowList.forEach((r,i)=>{idToRow[r.id]=i});
+  rowList.forEach((r,i)=>idToRow[r.id]=i);
+  let barsHtml='';
 
   rowList.forEach((r,i)=>{
     const top=i*ROW_H;
-    const col=depthColor(r.depth, r.type==='task'||r.type==='subtask');
+    const col=depthColor(r.depth, r.type!=='group');
     const node=r.node;
-
-    // row background stripe (alternating subtle)
+    // alternating row stripe
     if(i%2===0) barsHtml+=`<div style="position:absolute;left:0;top:${top}px;width:100%;height:${ROW_H}px;background:rgba(0,0,0,.012);pointer-events:none"></div>`;
 
-    const xs = xOf(node.startDate||node.due);
-    const xe = xOf(node.due);
+    const xs=xOf(node.startDate||node.due);
+    const xe=xOf(node.due);
     if(xs<0&&xe<0) return;
 
-    const barH = r.type==='group'?14:r.type==='subtask'?8:11;
-    const barTop = top+(ROW_H-barH)/2;
-    const barR = r.type==='group'?4:3;
-
-    const x1=Math.max(0,xs>=0?xs:xe);
-    const x2=xe>=0?xe:xs;
-    const barW=Math.max(DW*0.8, x2-x1);
-
+    const barH=r.type==='group'?14:r.type==='subtask'?8:11;
+    const barTop=top+(ROW_H-barH)/2; // always vertically centred in row
+    const barR=r.type==='group'?4:3;
     const dn=node.status==='Done';
+    const op=dn?'.45':'1';
 
-    // Duration bar (light color, start→due)
-    if(xs>=0&&xe>=0&&xe>xs){
-      barsHtml+=`<div style="position:absolute;left:${x1}px;top:${barTop}px;width:${barW}px;height:${barH}px;border-radius:${barR}px;background:${col.light};opacity:${dn?.45:1};z-index:2;pointer-events:none"></div>`;
-    } else {
-      // only one date — show as single block
-      barsHtml+=`<div style="position:absolute;left:${xe>=0?xe:xs}px;top:${barTop}px;width:${Math.max(DW*.7,8)}px;height:${barH}px;border-radius:${barR}px;background:${col.light};opacity:${dn?.45:1};z-index:2;pointer-events:none"></div>`;
-    }
+    const x1=xs>=0?xs:xe;
+    const x2=xe>=0?xe:xs;
 
-    // Due-date marker (dark color) — last DW pixels or a fixed square
+    // Duration bar: from x1 to end of the due-date column (x2+DW)
+    // So the bar always ends flush with the right edge of the due column.
+    const durW=Math.max(DW, x2-x1+DW);
+    barsHtml+=`<div style="position:absolute;left:${x1}px;top:${barTop}px;width:${durW}px;height:${barH}px;border-radius:${barR}px;background:${col.light};opacity:${op};z-index:2;pointer-events:none"></div>`;
+
+    // Due-date marker: always covers exactly the due-date column [xe … xe+DW]
+    // This is the FIX — position is xe (the column left edge), width is DW.
     if(xe>=0){
-      const mW=Math.min(barH, DW*.6);
-      barsHtml+=`<div style="position:absolute;left:${xe+barW-mW}px;top:${barTop}px;width:${mW}px;height:${barH}px;border-radius:0 ${barR}px ${barR}px 0;background:${col.dark};opacity:${dn?.45:1};z-index:3;pointer-events:none" title="Due: ${fdt(node.due)}"></div>`;
+      const mW=Math.min(DW, barH*1.2); // cap at column width
+      barsHtml+=`<div style="position:absolute;left:${xe}px;top:${barTop}px;width:${mW}px;height:${barH}px;border-radius:${x1===xe?barR+' '+barR:0+' '+barR} ${barR}px ${x1===xe?barR:0}px;background:${col.dark};opacity:${op};z-index:3;pointer-events:none" title="Due: ${fdt(node.due)}"></div>`;
     }
 
-    // Clickable hit area
+    // Clickable hit area (full row height)
     if(r.type==='task'){
-      barsHtml+=`<div style="position:absolute;left:${x1}px;top:${top}px;width:${Math.max(barW+4,20)}px;height:${ROW_H}px;z-index:4;cursor:pointer" onclick="openPanel('${r.id}')" title="${esc(r.name)}"></div>`;
+      barsHtml+=`<div style="position:absolute;left:${x1}px;top:${top}px;width:${durW}px;height:${ROW_H}px;z-index:4;cursor:pointer" onclick="openPanel('${r.id}')" title="${esc(r.name)}"></div>`;
     }
   });
 
-  /* 10. Dependency arrows (SVG) */
+  /* ── 9. Dependency arrows ── */
   let arrows='';
   rowList.forEach(r=>{
-    if((r.type!=='task'&&r.type!=='subtask')||!(r.node.deps||[]).length)return;
-    const toRow=idToRow[r.id];
+    if(r.type==='group'||!(r.node.deps||[]).length) return;
+    const toIdx=idToRow[r.id];
     const toX=xOf(r.node.startDate||r.node.due);
-    if(toX<0)return;
+    if(toX<0) return;
     r.node.deps.forEach(depId=>{
-      const fromIdx=idToRow[depId];if(fromIdx===undefined)return;
+      const fromIdx=idToRow[depId]; if(fromIdx===undefined) return;
       const fromNode=rowList[fromIdx].node;
       const fromX=xOf(fromNode.due||fromNode.startDate);
-      if(fromX<0)return;
+      if(fromX<0) return;
       const y1=(fromIdx+.5)*ROW_H;
-      const y2=(toRow+.5)*ROW_H;
-      const x1=fromX+Math.min(DW*.7,10);
-      const x2=toX-2;
-      const mid=(x1+x2)/2;
-      arrows+=`<path d="M${x1},${y1} C${mid},${y1} ${mid},${y2} ${x2},${y2}" stroke="#993C1D" stroke-width="1.5" fill="none" opacity="0.65" marker-end="url(#arr)"/>`;
+      const y2=(toIdx+.5)*ROW_H;
+      const fx=fromX+DW; // right edge of from-bar due column
+      const tx=toX;      // left edge of to-bar start column
+      const mid=(fx+tx)/2;
+      arrows+=`<path d="M${fx},${y1} C${mid},${y1} ${mid},${y2} ${tx},${y2}" stroke="#993C1D" stroke-width="1.5" fill="none" opacity="0.65" marker-end="url(#arr)"/>`;
     });
   });
 
+  /* ── 10. Assemble HTML ──
+     The key to scroll-sync: both .g-left-body and .g-right-body
+     scroll vertically. We mirror scrollTop from right→left via JS
+     added as an inline onscroll. Horizontal scroll only on right. */
   return`<div class="gw">
-    <div class="gl">
-      <div class="gl-hdr">Project / Task</div>
-      <div class="gl-body">${lblHtml}</div>
-    </div>
-    <div class="gr">
-      <div class="gr-hdr-wrap">
-        ${monthHeader}
-        ${dayHeader}
+    <div class="g-left-col">
+      <div class="g-left-hdr" style="height:${zl.unit==='day'?48:24}px">Project / Task</div>
+      <div class="g-left-body" id="g-left-body" style="overflow:hidden">
+        <div id="g-left-inner">${lblHtml}</div>
       </div>
-      <div style="position:relative;min-width:${TW}px;height:${bh}px">
-        ${grid}${todayLine}${barsHtml}
-        <svg style="position:absolute;top:0;left:0;width:${TW}px;height:${bh}px;pointer-events:none;overflow:visible" xmlns="http://www.w3.org/2000/svg">
-          <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#993C1D" opacity="0.65"/></marker></defs>
-          ${arrows}
-        </svg>
+    </div>
+    <div class="g-right-col">
+      <div class="g-right-hdr" style="height:${zl.unit==='day'?48:24}px;overflow:hidden">
+        <div id="g-hdr-inner" style="will-change:transform">
+          ${monthHeader}${dayHeader}
+        </div>
+      </div>
+      <div class="g-right-body" id="g-right-body"
+           onscroll="
+             document.getElementById('g-left-body').scrollTop=this.scrollTop;
+             document.getElementById('g-hdr-inner').style.transform='translateX(-'+this.scrollLeft+'px)';
+           ">
+        <div style="position:relative;width:${TW}px;height:${bh}px">
+          ${grid}${todayLine}${barsHtml}
+          <svg style="position:absolute;top:0;left:0;width:${TW}px;height:${bh}px;pointer-events:none;overflow:visible" xmlns="http://www.w3.org/2000/svg">
+            <defs><marker id="arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L0,7 L7,3.5 z" fill="#993C1D" opacity="0.65"/></marker></defs>
+            ${arrows}
+          </svg>
+        </div>
       </div>
     </div>
   </div>`;
