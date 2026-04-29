@@ -300,6 +300,9 @@ const ROW_H = 32; // px — must match .glbl-row and .grow height
 
 let nodes=[], ex={}, cv='table', fA='', fS='', fP='', uid=1;
 let apiUrl='', pushTimer=null, busy=false;
+let hideDone=false;
+let fontSize=14; // px, range 11–20
+const FONT_MIN=11, FONT_MAX=20;
 
 /* ─── UTILS ─── */
 const $=id=>document.getElementById(id);
@@ -309,11 +312,13 @@ function sbadge(s){const m={'To do':'s0','In progress':'s1','Done':'s2','Blocked
 function pico(p){const m={High:['phi','▲'],Med:['pmd','●'],Low:['plo','▽']};const r=m[p];return r?`<span class="${r[0]}">${r[1]}</span>`:''}
 function fdt(d){if(!d)return'';const[,m,dy]=d.split('-');return['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+' '+ +dy}
 function avatar(n,sz=22){const t=TEAM[n]||{ini:(n||'?').slice(0,2).toUpperCase(),c:'#888',bg:'#eee'};return`<div class="av" style="width:${sz}px;height:${sz}px;font-size:${sz<20?8:9}px;background:${t.bg};color:${t.c};border:1.5px solid ${t.c}50" title="${esc(n)}">${t.ini}</div>`}
-function mt(t){if(fA&&!(t.assignees||[]).includes(fA))return 0;if(fS&&t.status!==fS)return 0;if(fP&&t.priority!==fP)return 0;return 1}
+function mt(t){if(hideDone&&t.status==='Done')return 0;if(fA&&!(t.assignees||[]).includes(fA))return 0;if(fS&&t.status!==fS)return 0;if(fP&&t.priority!==fP)return 0;return 1}
 function getDeps(){return[...document.querySelectorAll('.depk input:checked')].map(b=>b.value)}
 function tex(id){ex[id]=!ex[id];render()}
 function sw(v){cv=v;document.querySelectorAll('.vt').forEach((b,i)=>b.classList.toggle('on',['table','gantt','list'][i]===v));$('gzoom-ctrl').style.display=v==='gantt'?'flex':'none';render()}
 function zoom(dir){gzoomLevel=Math.max(0,Math.min(ZOOM_LEVELS.length-1,gzoomLevel+dir));$('gzlbl').textContent=ZOOM_LEVELS[gzoomLevel].label;render()}
+function toggleHideDone(){hideDone=!hideDone;const b=$('hide-done-btn');if(b){b.textContent=hideDone?'Show completed':'Hide completed';b.style.background=hideDone?'var(--e1)':'';b.style.color=hideDone?'#fff':'';b.style.borderColor=hideDone?'var(--e1t)':'';}render()}
+function changeFontSize(dir){fontSize=Math.max(FONT_MIN,Math.min(FONT_MAX,fontSize+dir));document.body.style.fontSize=fontSize+'px';const lbl=$('fslbl');if(lbl)lbl.textContent=fontSize+'px'}
 
 /* ─── TREE HELPERS ─── */
 function children(pid){return nodes.filter(n=>n.parentId===pid)}
@@ -615,11 +620,12 @@ function renderGantt(){
     const durW=Math.max(DW, x2-x1+DW);
     barsHtml+=`<div style="position:absolute;left:${x1}px;top:${barTop}px;width:${durW}px;height:${barH}px;border-radius:${barR}px;background:${col.light};opacity:${op};z-index:2;pointer-events:none"></div>`;
 
-    // Due-date marker: always covers exactly the due-date column [xe … xe+DW]
-    // This is the FIX — position is xe (the column left edge), width is DW.
+    // Due-date marker: always covers the FULL due-date column [xe … xe+DW].
+    // Width is always exactly DW so it fills the entire column regardless of zoom.
     if(xe>=0){
-      const mW=Math.min(DW, barH*1.2); // cap at column width
-      barsHtml+=`<div style="position:absolute;left:${xe}px;top:${barTop}px;width:${mW}px;height:${barH}px;border-radius:${x1===xe?barR+' '+barR:0+' '+barR} ${barR}px ${x1===xe?barR:0}px;background:${col.dark};opacity:${op};z-index:3;pointer-events:none" title="Due: ${fdt(node.due)}"></div>`;
+      const sameCol=(x1===xe);
+      const rTL=sameCol?barR:0, rBL=sameCol?barR:0;
+      barsHtml+=`<div style="position:absolute;left:${xe}px;top:${barTop}px;width:${DW}px;height:${barH}px;border-radius:${rTL}px ${barR}px ${barR}px ${rBL}px;background:${col.dark};opacity:${op};z-index:3;pointer-events:none" title="Due: ${fdt(node.due)}"></div>`;
     }
 
     // Clickable hit area (full row height)
